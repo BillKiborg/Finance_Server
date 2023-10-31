@@ -6,7 +6,7 @@
 int main(){
     setlocale(LC_ALL, "rus");    
 
-#define CLIENT
+//#define CLIENT
 #ifndef CLIENT
     Boost_Transmitter transmitter;
     transmitter.run();
