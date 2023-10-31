@@ -6,19 +6,43 @@ Boost_Transmitter::Boost_Transmitter(){
 
 void Boost_Transmitter::handle_connection(boost::asio::ip::tcp::socket& socket){
 
-	std::cout << "New connection\n";
-
-	boost::system::error_code error_code;
+	std::cout << "New connection\n";	
 	std::string message;
 
-	do {
-		boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\n");
-		std::cout << "Message: " << message << std::endl;
-		boost::asio::write(socket, boost::asio::buffer("Status: OK\n"), error_code);
-		if (message == "\n") return;
-	}
-	while (!error_code);
+	while (true) try {		
+		
+		if (socket.available()) {
 
+			last_ping = std::chrono::system_clock::now();
+
+			boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), '\n');
+			std::cout << "Message: " << message << std::endl;			
+			boost::asio::write(socket, boost::asio::buffer("Status: OK\n"));			
+			message.clear();
+		}
+
+		if (time_out()) {
+			std::cout << "Socket close\n";
+			socket.close();
+			break;
+		}
+		
+	}
+	catch (std::exception& exc) {
+		std::cerr << "Exc: " << exc.what() << std::endl;
+		socket.close();
+		break;
+	}	
+
+}
+
+bool Boost_Transmitter::time_out(){
+
+	auto time 
+		= std::chrono::duration_cast<std::chrono::milliseconds>
+									(std::chrono::system_clock::now() - last_ping).count();
+
+	return (time > 15000 ? true : false);
 }
 
 void Boost_Transmitter::run(){
@@ -34,12 +58,17 @@ void Boost_Transmitter::run(){
 	while (true) try {
 
 		tcp::socket socket{ io_context };
-		acceptor.accept(socket);
-		handle_connection(socket);
+		acceptor.accept(socket);		
+
+		std::thread th{ [this, &socket] {
+			last_ping = std::chrono::system_clock::now();
+			handle_connection(socket);
+		} };
+		th.join();
 
 	}
 	catch (std::exception& exc) {
 		std::cerr << "Exc: " << exc.what() << std::endl;
-	}
+	}	
 
 }

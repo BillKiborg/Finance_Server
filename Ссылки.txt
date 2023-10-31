@@ -1,0 +1,2 @@
+- boost::json
+https://qaa-engineer.ru/kak-ispolzovat-boost-json-dlya-raboty-s-json-dannymi-v-c/ 
