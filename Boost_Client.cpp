@@ -8,12 +8,21 @@ void Boost_Client::send(){
 
 void Boost_Client::run() {
 
+	std::string host;
+#ifdef LOCAL
+	host = "127.0.0.1";
+	std::cout << "Localhost\n";
+#else
+	host = "213.171.4.39";
+	std::cout << "Distancehost\n";
+#endif
+
 	using namespace boost::asio::ip;
 
 	boost::asio::io_context io_context;
 
 	tcp::socket		socket{ io_context };
-	tcp::endpoint	endpoint{ boost::asio::ip::address::from_string("213.171.4.39"/*"127.0.0.1"*/), 1111};
+	tcp::endpoint	endpoint{ boost::asio::ip::address::from_string(host), 1111};
 		
 	while(true) try	{
 		socket.connect(endpoint);
