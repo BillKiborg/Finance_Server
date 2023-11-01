@@ -2,6 +2,16 @@
 #include <iostream>
 #include <memory>
 
+template <typename Socket>
+class Connection_Manager {
+public:
+	virtual ~Connection_Manager() = default;
+	virtual void add_new_connection(Socket&&) = 0;
+};
+
+//-------------------------------------------------------------------------------
+
+
 class Abstract_Response {
 public:
 	virtual ~Abstract_Response() = default;

@@ -4,3 +4,5 @@
 /Finance_Server.vcxproj.filters
 /Finance_Server.vcxproj.user
 /output.json
+/Boost_Client.h
+/Boost_Client.cpp
