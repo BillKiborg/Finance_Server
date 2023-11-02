@@ -67,8 +67,20 @@ void Connection_Pool::connection_handler(){
 				boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\r\n\r\n");
 				std::cout << "Message: " << message << std::endl;
 
+				std::string html{ 
+					"<!DOCTYPE html>"
+					"<html>"
+					"<head>"
+						"<title>Пример страницы</title>"
+					"</head>"
+					"<body>"
+						"<h1>Привет, это Сервер!</h1>"
+					"</body>"
+					"</html>"
+				};				
+
 				std::string responce{ "HTTP/1.1 200 OK\r\n" 
-									  "Content-Length: 0\r\n\r\n"
+									  "Content-Length: " + std::to_string(html.size()) + "\r\n\r\n" + html
 				};
 
 				boost::asio::write(socket, boost::asio::buffer(responce));
