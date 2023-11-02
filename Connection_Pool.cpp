@@ -64,9 +64,9 @@ void Connection_Pool::connection_handler(){
 
 				last_ping = std::chrono::system_clock::now();
 
-				boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\r\n");
+				boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\r\n\r\n");
 				std::cout << "Message: " << message << std::endl;
-				boost::asio::write(socket, boost::asio::buffer("Status: OK\r\n"));
+				boost::asio::write(socket, boost::asio::buffer("Status: OK\r\n\r\n"));
 				message.clear();
 			}
 
