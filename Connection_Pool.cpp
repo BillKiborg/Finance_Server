@@ -66,7 +66,12 @@ void Connection_Pool::connection_handler(){
 
 				boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\r\n\r\n");
 				std::cout << "Message: " << message << std::endl;
-				boost::asio::write(socket, boost::asio::buffer("Status: OK\r\n\r\n"));
+
+				std::string responce{ "HTTP/1.1 200 OK\r\n" 
+									  "Content-Length: 0\r\n\r\n"
+				};
+
+				boost::asio::write(socket, boost::asio::buffer(responce));
 				message.clear();
 			}
 
