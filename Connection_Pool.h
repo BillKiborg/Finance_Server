@@ -12,13 +12,16 @@ class Connection_Pool :
 private:
 
 	std::vector<std::thread> threads;
-	//std::queue<boost::asio::ip::tcp::socket&&> sockets;
+	std::queue<boost::asio::ip::tcp::socket> new_sockets;
+	std::mutex mutex_new_sockets;
 	std::atomic_bool run;
+
+	bool time_out(std::chrono::system_clock::time_point, size_t delay);
 
 public:
 
 	void add_new_connection(boost::asio::ip::tcp::socket&&) override ;
-	void handler();
+	void connection_handler();	
 
 	Connection_Pool();
 	~Connection_Pool();
