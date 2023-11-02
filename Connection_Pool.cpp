@@ -79,8 +79,10 @@ void Connection_Pool::connection_handler(){
 					"</html>"
 				};				
 
-				std::string responce{ "HTTP/1.1 200 OK\r\n" 
-									  "Content-Length: " + std::to_string(html.size()) + "\r\n\r\n" + html
+				std::string responce{ 
+					"HTTP/1.1 200 OK\r\n" 
+					"Content-Type: text/html\r\n"
+					"Content-Length: " + std::to_string(html.size()) + "\r\n\r\n" + html
 				};
 
 				boost::asio::write(socket, boost::asio::buffer(responce));
