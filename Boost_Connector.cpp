@@ -32,11 +32,12 @@ void Boost_Connector::set_connection_manager(Connection_Manager* _connection_man
 void Boost_Connector::run() {	
 
 	if (!run_flag) {
-		using namespace boost::asio::ip;		
+
+		boost::asio::ip::tcp::endpoint endpoint{ boost::asio::ip::tcp::v4(), static_cast<boost::asio::ip::port_type>(port_number) };
 
 		acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(
 			*io_context,
-			tcp::endpoint{ tcp::v4(), static_cast<boost::asio::ip::port_type>(port_number) }
+			endpoint
 		);		
 
 		run_flag = true;
