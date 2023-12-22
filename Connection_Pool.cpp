@@ -1,73 +1,42 @@
 #include "Connection_Pool.h"
 
-bool Connection_Pool::time_out(std::chrono::system_clock::time_point last_ping, size_t delay) {
+Connection_Pool::~Connection_Pool(){
 
-	size_t time
-		= std::chrono::duration_cast<std::chrono::milliseconds>
-		(std::chrono::system_clock::now() - last_ping).count();
-
-	return (time > delay ? true : false);
-}
-
-void Connection_Pool::add_new_connection(boost::asio::ip::tcp::socket&& socket){
-	
-	std::unique_lock<std::mutex> lock{ mutex_new_sockets };
-	new_sockets.push(std::move(socket));	
+	run_flag = false;
+	for (auto& thread : threads) {
+		if (thread.joinable()) {
+			thread.join();
+		}
+	}
 
 }
 
 Connection_Pool::Connection_Pool(){
-
-	run = true;
-	for (int i = 0; i < 2; ++i) {
-		threads.push_back(std::thread{ &Connection_Pool::connection_handler, this });
-	}	
-
+	setup();
 }
 
-Connection_Pool::~Connection_Pool(){	
+void Connection_Pool::setup() {
 
-	run = false;
-	std::ranges::for_each(threads, [](std::thread& thread) {
-		if (thread.joinable()) {
-			thread.join();
-		}
-	});
-
+	run_flag = true;
+	for (int i = 0; i < 1; ++i)	{
+		threads.push_back(std::thread{ &Connection_Pool::work, this });
+	}
 }
 
+void Connection_Pool::work(){
+		
+	while (run_flag) try {		
 
-void Connection_Pool::connection_handler(){	
+		std::unique_ptr<Connection>	connection{ get_connection() };
 
-	boost::asio::io_context io_context;
-	boost::asio::ip::tcp::socket socket{ io_context };
+		auto message = connection->read(8000);
+		std::cout << "Msg: " << message << "\n";
 
-	while (run)	{
+		std::this_thread::sleep_for(std::chrono::seconds{ 10 });
 
-		while (true) {
-
-			std::unique_lock<std::mutex> lock{ mutex_new_sockets };
-			if (!new_sockets.empty()) {
-				socket = std::move(new_sockets.front());
-				new_sockets.pop();
-				break;
-			}
-			std::this_thread::yield();
-		}
-
-		std::cout << "Новое соеднение\n";
-		std::string message;
-		std::chrono::system_clock::time_point last_ping = std::chrono::system_clock::now();
-		while (true) try {
-
-			if (socket.available()) {
-
-				last_ping = std::chrono::system_clock::now();
-
-				boost::asio::read_until(socket, boost::asio::dynamic_buffer(message), "\r\n\r\n");
-				std::cout << "Message: " << message << std::endl;
-
-				std::string html{ 
+		std::stringstream stream;
+		
+		std::string html{
 					"<!DOCTYPE html>"
 					"<html>"
 					"<head>"
@@ -77,32 +46,52 @@ void Connection_Pool::connection_handler(){
 						"<h1>Привет, это Сервер!</h1>"
 					"</body>"
 					"</html>"
-				};				
+		};
 
-				std::string responce{ 
-					"HTTP/1.1 200 OK\r\n" 
-					"Content-Type: text/html\r\n"
-					"Content-Length: " + std::to_string(html.size()) + "\r\n\r\n" + html
-				};
+		std::string responce{
+			"HTTP/1.1 200 OK\r\n"
+			"Content-Type: text/html\r\n"
+			"Content-Length: " + std::to_string(html.size()) + "\r\n\r\n" + html
+		};
 
-				boost::asio::write(socket, boost::asio::buffer(responce));
-				message.clear();
-			}
+		connection->write(responce);
 
-			if (time_out(last_ping, 6000)) {
-				socket.close();
-				std::cout << "Socket close\n";
-				break;
-			}
+		connection->close();
+		std::this_thread::sleep_for(std::chrono::nanoseconds{ 1 });
 
-			std::this_thread::sleep_for(std::chrono::milliseconds{ 1 });
-
-		}
-		catch (std::exception& exc) {
-			std::cerr << "Exc: " << exc.what() << std::endl;
-			socket.close();
-			break;
-		}
+	}
+	catch (std::exception& exc) {
+		std::cout << "Exc: " << exc.what() << "\n";
 	}
 
+}
+
+Connection* Connection_Pool::get_connection(){
+
+	while (run_flag) {
+
+		std::unique_lock<std::mutex> lock{ mutex };
+
+		if (!connections.empty()) {
+
+			auto connection = connections.front();
+			connections.pop();
+			return connection;
+		}		
+		std::this_thread::sleep_for(std::chrono::nanoseconds{ 1 });
+	}
+
+	throw std::runtime_error{ "Connection_Pool - Run flag = false" };
+	
+}
+
+void Connection_Pool::add_connection(Connection* new_connection){
+
+	std::cout << "Новое соединение\n";
+	std::unique_lock<std::mutex> lock{ mutex };
+	connections.push(new_connection);
+
+}
+
+void Connection_Pool::del_connection(Connection*){
 }

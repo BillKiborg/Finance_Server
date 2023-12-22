@@ -1,0 +1,5 @@
+name: cp11635
+пароль: m28K41kOk#vs
+
+ssh root@90.156.226.125
+hPW77iY_63g-QJ

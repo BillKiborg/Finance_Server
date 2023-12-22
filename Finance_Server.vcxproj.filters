@@ -13,33 +13,84 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{fa3a45bb-07d3-4a94-8880-9c8a572bb304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces\H">
+      <UniqueIdentifier>{eb5d58a7-84d0-45fd-8763-7f5f316e0fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces\CPP">
+      <UniqueIdentifier>{46b6d685-5570-46db-8cb8-8a8389d9b8e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transmitter">
+      <UniqueIdentifier>{84c3d171-0545-4a8a-b1de-ea31fe7ead29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transmitter\H">
+      <UniqueIdentifier>{15969867-de9d-4c74-9d1a-20cc7300b68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transmitter\CPP">
+      <UniqueIdentifier>{9cdb6960-425a-4127-9ce8-a1434ed6b700}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Boost_Transmitter.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Boost_Client.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Connection_Pool.cpp">
+    <ClCompile Include="Connection_Pool_Old.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Boost_Connector_old.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Query_Validator.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Boost_Connector.cpp">
+      <Filter>Transmitter\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Connection_Pool.cpp">
+      <Filter>Transmitter\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Web_Connection.cpp">
+      <Filter>Transmitter\CPP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Boost_Transmitter.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Interface.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Boost_Client.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Connection_Pool.h">
+    <ClInclude Include="Connection_Pool_Old.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Boost_Connector_old.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Query_Validator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Connector.h">
+      <Filter>Interfaces\H</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection_Manager.h">
+      <Filter>Interfaces\H</Filter>
+    </ClInclude>
+    <ClInclude Include="Boost_Connector.h">
+      <Filter>Transmitter\H</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
+      <Filter>Interfaces\H</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection_Pool.h">
+      <Filter>Transmitter\H</Filter>
+    </ClInclude>
+    <ClInclude Include="Web_Connection.h">
+      <Filter>Transmitter\H</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

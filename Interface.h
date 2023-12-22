@@ -1,45 +1,40 @@
 #pragma once
-#include <iostream>
+#include <string>
 #include <memory>
 
 template <typename Socket>
-class Connection_Manager {
+class Connection_Manager_Old {
 public:
-	virtual ~Connection_Manager() = default;
+	virtual ~Connection_Manager_Old() = default;
 	virtual void add_new_connection(Socket&&) = 0;
 };
 
 //-------------------------------------------------------------------------------
 
-
-class Abstract_Response {
-public:
-	virtual ~Abstract_Response() = default;
-};
-
 class Transmitter {
 public:
 	virtual ~Transmitter() = default;
-	virtual void run() = 0;
-	//virtual bool send_response(Abstract_Response*) = 0;
+	virtual void run() = 0;	
 };
 
 //-------------------------------------------------------------------------------
 
-class Abstract_Validator {
-	virtual ~Abstract_Validator() = default;
+template <typename Data>
+class Validator {
+public:
+	virtual ~Validator() = default;
+	virtual bool to_validate(Data) = 0;
 };
 
-class Transmission_Queue_Manager { 
+template <typename Data, typename Result>
+class Parser {
 public:
-	virtual ~Transmission_Queue_Manager() = default;
-	virtual void add_query(std::string) = 0;
-	virtual std::unique_ptr<Abstract_Response> get_response() = 0;
+	virtual ~Parser() = default;
+	virtual Result to_parse(Data) = 0;
 };
 
-class Processing_Queue_Manager { 
+class Handler {
 public:
-	virtual ~Processing_Queue_Manager() = default;
-	virtual std::string get_query() = 0;
-	virtual void add_response(std::unique_ptr<Abstract_Response>) = 0;
+	virtual ~Handler() = default;
+	virtual void execute() = 0;
 };
