@@ -33,7 +33,7 @@ void Boost_Connector::run() {
 
 	if (!run_flag) {
 
-		boost::asio::ip::tcp::endpoint endpoint{ boost::asio::ip::tcp::v4(), static_cast<boost::asio::ip::port_type>(port_number) };
+		boost::asio::ip::tcp::endpoint endpoint{ boost::asio::ip::tcp::v4(), static_cast<unsigned short/*boost::asio::ip::port_type*/>(port_number) };
 
 		acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(
 			*io_context,

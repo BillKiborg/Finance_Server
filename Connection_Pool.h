@@ -10,14 +10,22 @@
 #include <atomic>
 #include <sstream>
 
+#include <filesystem>
+#include <fstream>
+
 class Connection_Pool : public Connection_Manager {
 private:
+
+	unsigned thread_count = 2;
 
 	std::vector<std::thread> threads;
 	std::queue<Connection*> connections;
 
 	std::mutex mutex;
 	std::atomic_bool run_flag = false;
+
+	std::filesystem::path get_resources_path();
+	std::string get_response();
 
 	void setup();
 	void work();
