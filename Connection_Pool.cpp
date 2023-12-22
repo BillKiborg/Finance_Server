@@ -87,7 +87,7 @@ void Connection_Pool::work(){
 		connection->write(response);
 		connection->close();
 
-		std::this_thread::sleep_for(std::chrono::nanoseconds{ 1 });
+		std::this_thread::sleep_for(std::chrono::milliseconds{ 1 });
 
 	}
 	catch (std::exception& exc) {
@@ -108,7 +108,7 @@ Connection* Connection_Pool::get_connection(){
 			connections.pop();
 			return connection;
 		}		
-		std::this_thread::sleep_for(std::chrono::nanoseconds{ 1 });
+		std::this_thread::sleep_for(std::chrono::milliseconds{ 1 });
 	}
 
 	throw std::runtime_error{ "Connection_Pool - Run flag = false" };
